@@ -13,7 +13,12 @@ public class RideRepository {
         this.userRides.put(userId, new ArrayList<Rides>(Arrays.asList(rides)));
     }
 
-    public Rides[] getRides(String userId) {
-        return this.userRides.get(userId).toArray(new Rides[0]);
+    public Rides[] getRides(String userId) throws InvoiceServiceException {
+        try {
+            return this.userRides.get(userId).toArray(new Rides[0]);
+        }catch (NullPointerException e){
+            throw new InvoiceServiceException(e.getMessage(),InvoiceServiceException.ExceptionType.NO_DATA_ADDED);
+        }
+
     }
 }

@@ -38,7 +38,11 @@ public class InvoiceService {
         rideRepository.addRides(userId, rides);
     }
 
-    public InvoiceSummary getInvoiceSummary(String userId) {
-        return this.calculateFare(rideRepository.getRides(userId));
+    public InvoiceSummary getInvoiceSummary(String userId) throws InvoiceServiceException {
+        try {
+            return this.calculateFare(rideRepository.getRides(userId));
+        } catch (InvoiceServiceException e) {
+            throw new InvoiceServiceException(e.getMessage(),InvoiceServiceException.ExceptionType.NO_DATA_ADDED);
+        }
     }
 }

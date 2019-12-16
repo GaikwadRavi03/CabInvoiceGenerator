@@ -41,7 +41,11 @@ public class InvoiceServiceTest {
                 new Rides(0.1, 1)
         };
         cabInvoiceGenerator.addRides(userId, rides);
-        InvoiceSummary summary = cabInvoiceGenerator.getInvoiceSummary(userId);
+        InvoiceSummary summary = null;
+        try {
+            summary = cabInvoiceGenerator.getInvoiceSummary(userId);
+        } catch (InvoiceServiceException e) {
+        }
         InvoiceSummary expectedInvoiceSummery = new InvoiceSummary(2, 30);
         Assert.assertEquals(expectedInvoiceSummery, summary);
     }
@@ -82,7 +86,11 @@ public class InvoiceServiceTest {
                 new Rides(0.1, 1)
         };
         cabInvoiceGenerator.addRides(userId, rides);
-        InvoiceSummary summary = cabInvoiceGenerator.getInvoiceSummary(userId);
+        InvoiceSummary summary = null;
+        try {
+            summary = cabInvoiceGenerator.getInvoiceSummary(userId);
+        } catch (InvoiceServiceException e) {
+        }
         InvoiceSummary expectedInvoiceSummery = new InvoiceSummary(2, 60);
         Assert.assertEquals(expectedInvoiceSummery, summary);
     }
