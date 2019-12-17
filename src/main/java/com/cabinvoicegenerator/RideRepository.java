@@ -3,22 +3,25 @@ package com.cabinvoicegenerator;
 import java.util.*;
 
 public class RideRepository {
-    Map<String, ArrayList<Rides>> userRides ;
+    Map<String, List<Rides>> userRides;
 
     public RideRepository() {
         this.userRides = new HashMap<>();
     }
 
     public void addRides(String userId, Rides[] rides) {
-        this.userRides.put(userId, new ArrayList<Rides>(Arrays.asList(rides)));
+        List<Rides> ridesList = new ArrayList<>(Arrays.asList(rides));
+        List<Rides> list = this.userRides.get(userId);
+        if (list != null) ridesList.addAll(list);
+        this.userRides.put(userId, ridesList);
     }
 
-    public Rides[] getRides(String userId) throws InvoiceServiceException {
+    public List<Rides> getRides(String userId) throws InvoiceServiceException {
         try {
-            return this.userRides.get(userId).toArray(new Rides[0]);
-        }catch (NullPointerException e){
-            throw new InvoiceServiceException(e.getMessage(),InvoiceServiceException.ExceptionType.NO_DATA_ADDED);
+            return this.userRides.get(userId);
+        } catch (NullPointerException e) {
+            throw new InvoiceServiceException(e.getMessage(), InvoiceServiceException.ExceptionType.NO_DATA_ADDED);
         }
-
     }
+
 }

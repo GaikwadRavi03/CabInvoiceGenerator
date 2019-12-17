@@ -3,6 +3,8 @@ package com.cabinvoicegenerator;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.List;
+
 public class RideRepositoryTest {
 
     @Test
@@ -10,13 +12,12 @@ public class RideRepositoryTest {
         try {
             RideRepository rideRepository = new RideRepository();
             String userId = "a@b.com";
-            Rides[] rides = {new Rides(2.0, 5),
-                    new Rides(0.1, 1)
+            Rides[] rides = {new Rides(2.0, 5, TypesOfCabs.NORMAL_RIDES),
+                    new Rides(0.1, 1, TypesOfCabs.NORMAL_RIDES)
             };
             rideRepository.addRides(userId, rides);
-            Rides[] summary = new Rides[0];
-            summary = rideRepository.getRides(userId);
-            Assert.assertEquals(rides[0], summary[0]);
+            List<Rides> summary = rideRepository.getRides(userId);
+            Assert.assertEquals(2, summary.size());
         } catch (InvoiceServiceException e) {
         }
     }
@@ -26,9 +27,32 @@ public class RideRepositoryTest {
         try {
             RideRepository rideRepository = new RideRepository();
             String userId = "a@b.com";
-            Rides[] summary = rideRepository.getRides(userId);
+            List summary = rideRepository.getRides(userId);
         } catch (InvoiceServiceException e) {
             Assert.assertEquals(InvoiceServiceException.ExceptionType.NO_DATA_ADDED, e.type);
+        }
+    }
+
+    @Test
+    public void givenMessage_WhenUserIdsMultipleRidesAdded_ShouldReturnUsersInvoiceSummary() {
+        try {
+            RideRepository rideRepository = new RideRepository();
+            String userId = "a@b.com";
+            Rides[] rides1 = {new Rides(1.0, 10, TypesOfCabs.NORMAL_RIDES),
+                    new Rides(0.1, 1, TypesOfCabs.PREMIUM_RIDES)
+            };
+            Rides[] rides2 = {new Rides(3.0, 5, TypesOfCabs.NORMAL_RIDES),
+                    new Rides(0.1, 1, TypesOfCabs.PREMIUM_RIDES)
+            };
+            Rides[] rides3 = {new Rides(2.0, 5, TypesOfCabs.PREMIUM_RIDES),
+                    new Rides(0.1, 1, TypesOfCabs.NORMAL_RIDES)
+            };
+            rideRepository.addRides(userId, rides1);
+            rideRepository.addRides(userId, rides2);
+            rideRepository.addRides(userId, rides3);
+            List<Rides> ridesList = rideRepository.getRides(userId);
+            Assert.assertEquals(6, ridesList.size());
+        } catch (InvoiceServiceException e) {
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.cabinvoicegenerator;
 
+import java.util.List;
+
 public class InvoiceService {
     private static final double NORMAL_MINIMUM_COST_PER_KILOMETER = 10;
     private static final double PREMIUM_MINIMUM_COST_PER_KILOMETER = 15;
@@ -8,30 +10,29 @@ public class InvoiceService {
     private static final double NORMAL_MINIMUM_FARE = 5;
     private static final double PREMIUM_MINIMUM_FARE = 20;
     private RideRepository rideRepository;
-    private TypesOfCabs types;
 
-    public InvoiceService(TypesOfCabs types) {
+    public InvoiceService() {
         this.rideRepository = new RideRepository();
-        this.types = types;
     }
 
-    public double calculateFare(double distance, int time) {
-        if (this.types.equals(TypesOfCabs.NORMAL_RIDES)) {
+    public double calculateFare(double distance, int time,TypesOfCabs types) {
+        if (types.equals(TypesOfCabs.NORMAL_RIDES)) {
             double totalFare = (distance * NORMAL_MINIMUM_COST_PER_KILOMETER) + (time * NORMAL_COST_PER_MIN);
             return Math.max(totalFare, NORMAL_MINIMUM_FARE);
-        } else if (this.types.equals(TypesOfCabs.PREMIUM_RIDES)) {
+        }
+        if (types.equals(TypesOfCabs.PREMIUM_RIDES)) {
             double totalFare = (distance * PREMIUM_MINIMUM_COST_PER_KILOMETER) + (time * PREMIUM_COST_PER_MIN);
             return Math.max(totalFare, PREMIUM_MINIMUM_FARE);
         }
         return 0.0;
     }
 
-    public InvoiceSummary calculateFare(Rides[] rides) {
+    public InvoiceSummary calculateFare(List<Rides> rides) {
         double totalFare = 0;
         for (Rides ride : rides) {
-            totalFare += calculateFare(ride.distance, ride.time);
-        }
-        return new InvoiceSummary(rides.length, totalFare);
+            totalFare += calculateFare(ride.distance, ride.time,ride.rides);
+    }
+        return new InvoiceSummary(rides.size(), totalFare);
     }
 
     public void addRides(String userId, Rides[] rides) {
@@ -42,7 +43,7 @@ public class InvoiceService {
         try {
             return this.calculateFare(rideRepository.getRides(userId));
         } catch (InvoiceServiceException e) {
-            throw new InvoiceServiceException(e.getMessage(),InvoiceServiceException.ExceptionType.NO_DATA_ADDED);
+            throw new InvoiceServiceException(e.getMessage(), InvoiceServiceException.ExceptionType.NO_DATA_ADDED);
         }
     }
 }
