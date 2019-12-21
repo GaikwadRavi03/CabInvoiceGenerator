@@ -2,15 +2,13 @@ package com.cabinvoicegenerator;
 
 public class Rides {
 
-    public TypesOfCabs rides;
-    public int time;
+    public CabRides rides;
+    public double time;
     public double distance;
 
-    public Rides(double distance, int time, TypesOfCabs rides) {
+    public Rides(double distance, double time, CabRides rides) {
         this.distance = distance;
         this.time = time;
         this.rides = rides;
-
-
     }
 }
