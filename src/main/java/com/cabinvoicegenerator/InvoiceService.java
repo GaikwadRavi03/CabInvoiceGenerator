@@ -3,39 +3,44 @@ package com.cabinvoicegenerator;
 import java.util.List;
 
 public class InvoiceService {
-    private static final double NORMAL_MINIMUM_COST_PER_KILOMETER = 10;
-    private static final double PREMIUM_MINIMUM_COST_PER_KILOMETER = 15;
-    private static final int NORMAL_COST_PER_MIN = 1;
-    private static final int PREMIUM_COST_PER_MIN = 2;
-    private static final double NORMAL_MINIMUM_FARE = 5;
-    private static final double PREMIUM_MINIMUM_FARE = 20;
+
+    private CabRides type;
+    private double distance;
+    private double time;
+
     private RideRepository rideRepository;
 
     public InvoiceService() {
         this.rideRepository = new RideRepository();
     }
 
-    public double calculateFare(double distance, int time,TypesOfCabs types) {
-        if (types.equals(TypesOfCabs.NORMAL_RIDES)) {
-            double totalFare = (distance * NORMAL_MINIMUM_COST_PER_KILOMETER) + (time * NORMAL_COST_PER_MIN);
-            return Math.max(totalFare, NORMAL_MINIMUM_FARE);
-        }
-        if (types.equals(TypesOfCabs.PREMIUM_RIDES)) {
-            double totalFare = (distance * PREMIUM_MINIMUM_COST_PER_KILOMETER) + (time * PREMIUM_COST_PER_MIN);
-            return Math.max(totalFare, PREMIUM_MINIMUM_FARE);
-        }
-        return 0.0;
+    public InvoiceService(double distance, double time, CabRides type) {
+        this.rideRepository = new RideRepository();
+        this.distance = distance;
+        this.time = time;
+        this.type = type;
     }
 
-    public InvoiceSummary calculateFare(List<Rides> rides) {
-        double totalFare = 0;
-        for (Rides ride : rides) {
-            totalFare += calculateFare(ride.distance, ride.time,ride.rides);
+    public double calculateFare(Ride ride) {
+        double fare = ride.rides.calcCostOfCabRide(ride);
+        return fare;
     }
+
+    public double calculateFare() {
+        Ride ride = new Ride(distance, time, type);
+        double fare = ride.rides.calcCostOfCabRide(ride);
+        return fare;
+    }
+
+    public InvoiceSummary calculateFare(List<Ride> rides) {
+        double totalFare = 0;
+        for (Ride ride : rides) {
+            totalFare += calculateFare(ride);
+        }
         return new InvoiceSummary(rides.size(), totalFare);
     }
 
-    public void addRides(String userId, Rides[] rides) {
+    public void addRides(String userId, Ride[] rides) {
         rideRepository.addRides(userId, rides);
     }
 

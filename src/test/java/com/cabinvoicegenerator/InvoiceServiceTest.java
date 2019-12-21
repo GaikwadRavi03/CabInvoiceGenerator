@@ -11,27 +11,31 @@ public class InvoiceServiceTest {
 
     @Test
     public void givenDistanceAndTime_GeneratorShouldReturn_TotalFareForNormalRide() {
-        double distance = 2.0;
-        int time = 5;
-        InvoiceService invoiceGenerator = new InvoiceService();
-        double fare = invoiceGenerator.calculateFare(distance, time,TypesOfCabs.NORMAL_RIDES);
-        Assert.assertEquals(25, fare, 0.0);
+        try {
+            double distance = 2.0;
+            int time = 5;
+            InvoiceService invoiceGenerator = new InvoiceService(distance, time, CabRides.NORMAL_RIDES);
+            double fare = invoiceGenerator.calculateFare();
+            Assert.assertEquals(25, fare, 0.0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void givenDistanceAndTime_GeneratorShouldReturn_MinimumFareForNormalRide() {
         double distance = 0.1;
         int time = 1;
-        InvoiceService invoiceGenerator = new InvoiceService();
-        double fare = invoiceGenerator.calculateFare(distance, time,TypesOfCabs.NORMAL_RIDES);
+        InvoiceService invoiceGenerator = new InvoiceService(distance, time, CabRides.NORMAL_RIDES);
+        double fare = invoiceGenerator.calculateFare();
         Assert.assertEquals(5, fare, 0.0);
     }
 
     @Test
     public void givenMultipleRides_ShouldReturn_TotalFareForNormalRide() {
         InvoiceService cabInvoiceGenerator = new InvoiceService();
-        Rides[] rides = {new Rides(2.0, 5, TypesOfCabs.NORMAL_RIDES),
-                new Rides(0.1, 1, TypesOfCabs.NORMAL_RIDES)};
+        Ride[] rides = {new Ride(2.0, 5, CabRides.NORMAL_RIDES),
+                new Ride(0.1, 1, CabRides.NORMAL_RIDES)};
         List list = new ArrayList(Arrays.asList(rides));
         InvoiceSummary summary = cabInvoiceGenerator.calculateFare(list);
         InvoiceSummary expectedInvoiceSummery = new InvoiceSummary(2, 30);
@@ -42,25 +46,26 @@ public class InvoiceServiceTest {
     public void givenUserIdAndRides_ShouldReturnInvoiceSummaryForNormalRide() {
         InvoiceService cabInvoiceGenerator = new InvoiceService();
         String userId = "a@b.com";
-        Rides[] rides = {new Rides(2.0, 5, TypesOfCabs.NORMAL_RIDES),
-                new Rides(0.1, 1, TypesOfCabs.NORMAL_RIDES)
+        Ride[] rides = {new Ride(2.0, 5, CabRides.NORMAL_RIDES),
+                new Ride(0.1, 1, CabRides.NORMAL_RIDES)
         };
-        cabInvoiceGenerator.addRides(userId, rides);
-        InvoiceSummary summary = null;
         try {
-            summary = cabInvoiceGenerator.getInvoiceSummary(userId);
+            cabInvoiceGenerator.addRides(userId, rides);
+            InvoiceSummary summary = cabInvoiceGenerator.getInvoiceSummary(userId);
+            System.out.println(summary);
+            InvoiceSummary expectedInvoiceSummery = new InvoiceSummary(2, 30);
+            System.out.println(expectedInvoiceSummery);
+            Assert.assertEquals(expectedInvoiceSummery, summary);
         } catch (InvoiceServiceException e) {
         }
-        InvoiceSummary expectedInvoiceSummery = new InvoiceSummary(2, 30);
-        Assert.assertEquals(expectedInvoiceSummery, summary);
     }
 
     @Test
     public void givenDistanceAndTime_GeneratorShouldReturn_TotalFareForPremiumRide() {
         double distance = 2.0;
         int time = 5;
-        InvoiceService invoiceGenerator = new InvoiceService();
-        double fare = invoiceGenerator.calculateFare(distance, time,TypesOfCabs.PREMIUM_RIDES);
+        InvoiceService invoiceGenerator = new InvoiceService(distance, time, CabRides.PREMIUM_RIDES);
+        double fare = invoiceGenerator.calculateFare();
         Assert.assertEquals(40, fare, 0.0);
     }
 
@@ -68,16 +73,16 @@ public class InvoiceServiceTest {
     public void givenDistanceAndTime_GeneratorShouldReturn_MinimumFareForPremiumRide() {
         double distance = 0.1;
         int time = 1;
-        InvoiceService invoiceGenerator = new InvoiceService();
-        double fare = invoiceGenerator.calculateFare(distance, time,TypesOfCabs.PREMIUM_RIDES);
+        InvoiceService invoiceGenerator = new InvoiceService(distance, time, CabRides.PREMIUM_RIDES);
+        double fare = invoiceGenerator.calculateFare();
         Assert.assertEquals(20, fare, 0.0);
     }
 
     @Test
     public void givenMultipleRides_ShouldReturn_TotalFareForPremiumRide() {
         InvoiceService cabInvoiceGenerator = new InvoiceService();
-        Rides[] rides = {new Rides(2.0, 5, TypesOfCabs.PREMIUM_RIDES),
-                new Rides(0.1, 1, TypesOfCabs.PREMIUM_RIDES)};
+        Ride[] rides = {new Ride(2.0, 5, CabRides.PREMIUM_RIDES),
+                new Ride(0.1, 1, CabRides.PREMIUM_RIDES)};
         List list = new ArrayList(Arrays.asList(rides));
         InvoiceSummary summary = cabInvoiceGenerator.calculateFare(list);
         InvoiceSummary expectedInvoiceSummery = new InvoiceSummary(2, 60);
@@ -88,8 +93,8 @@ public class InvoiceServiceTest {
     public void givenUserIdAndRides_ShouldReturnInvoiceSummaryForPremiumRide() {
         InvoiceService cabInvoiceGenerator = new InvoiceService();
         String userId = "a@b.com";
-        Rides[] rides = {new Rides(2.0, 5, TypesOfCabs.PREMIUM_RIDES),
-                new Rides(0.1, 1, TypesOfCabs.PREMIUM_RIDES)
+        Ride[] rides = {new Ride(2.0, 5, CabRides.PREMIUM_RIDES),
+                new Ride(0.1, 1, CabRides.PREMIUM_RIDES)
         };
         cabInvoiceGenerator.addRides(userId, rides);
         InvoiceSummary summary = null;
@@ -106,8 +111,8 @@ public class InvoiceServiceTest {
         InvoiceService ride = new InvoiceService();
 
         String userId = "a@b.com";
-        Rides[] rides = {new Rides(2.0, 5,TypesOfCabs.PREMIUM_RIDES),
-                new Rides(0.1, 1,TypesOfCabs.NORMAL_RIDES)
+        Ride[] rides = {new Ride(2.0, 5, CabRides.PREMIUM_RIDES),
+                new Ride(0.1, 1, CabRides.NORMAL_RIDES)
         };
         ride.addRides(userId, rides);
         InvoiceSummary summary = null;
@@ -123,18 +128,18 @@ public class InvoiceServiceTest {
     public void givenUserIdRidesMultipleTypesOfCabs_ShouldReturnTotalFareInvoiceSummaryForAllRides() {
         InvoiceService ride = new InvoiceService();
         String userId = "a@b.com";
-        Rides[] rides1 = {new Rides(1.0, 10, TypesOfCabs.NORMAL_RIDES),
-                new Rides(0.1, 1, TypesOfCabs.PREMIUM_RIDES)
+        Ride[] ride1 = {new Ride(1.0, 10, CabRides.NORMAL_RIDES),
+                new Ride(0.1, 1, CabRides.PREMIUM_RIDES)
         };
-        Rides[] rides2 = {new Rides(3.0, 5, TypesOfCabs.NORMAL_RIDES),
-                new Rides(0.1, 1, TypesOfCabs.PREMIUM_RIDES)
+        Ride[] ride2 = {new Ride(3.0, 5, CabRides.NORMAL_RIDES),
+                new Ride(0.1, 1, CabRides.PREMIUM_RIDES)
         };
-        Rides[] rides3 = {new Rides(2.0, 5, TypesOfCabs.PREMIUM_RIDES),
-                new Rides(0.1, 1, TypesOfCabs.NORMAL_RIDES)
+        Ride[] ride3 = {new Ride(2.0, 5, CabRides.PREMIUM_RIDES),
+                new Ride(0.1, 1, CabRides.NORMAL_RIDES)
         };
-        ride.addRides(userId, rides1);
-        ride.addRides(userId, rides2);
-        ride.addRides(userId, rides3);
+        ride.addRides(userId, ride1);
+        ride.addRides(userId, ride2);
+        ride.addRides(userId, ride3);
 
         InvoiceSummary summary = null;
         try {

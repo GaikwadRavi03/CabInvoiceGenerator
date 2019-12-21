@@ -12,11 +12,11 @@ public class RideRepositoryTest {
         try {
             RideRepository rideRepository = new RideRepository();
             String userId = "a@b.com";
-            Rides[] rides = {new Rides(2.0, 5, TypesOfCabs.NORMAL_RIDES),
-                    new Rides(0.1, 1, TypesOfCabs.NORMAL_RIDES)
+            Ride[] rides = {new Ride(2.0, 5, CabRides.NORMAL_RIDES),
+                    new Ride(0.1, 1, CabRides.NORMAL_RIDES)
             };
             rideRepository.addRides(userId, rides);
-            List<Rides> summary = rideRepository.getRides(userId);
+            List<Ride> summary = rideRepository.getRides(userId);
             Assert.assertEquals(2, summary.size());
         } catch (InvoiceServiceException e) {
         }
@@ -38,20 +38,20 @@ public class RideRepositoryTest {
         try {
             RideRepository rideRepository = new RideRepository();
             String userId = "a@b.com";
-            Rides[] rides1 = {new Rides(1.0, 10, TypesOfCabs.NORMAL_RIDES),
-                    new Rides(0.1, 1, TypesOfCabs.PREMIUM_RIDES)
+            Ride[] ride1 = {new Ride(1.0, 10, CabRides.NORMAL_RIDES),
+                    new Ride(0.1, 1, CabRides.PREMIUM_RIDES)
             };
-            Rides[] rides2 = {new Rides(3.0, 5, TypesOfCabs.NORMAL_RIDES),
-                    new Rides(0.1, 1, TypesOfCabs.PREMIUM_RIDES)
+            Ride[] ride2 = {new Ride(3.0, 5, CabRides.NORMAL_RIDES),
+                    new Ride(0.1, 1, CabRides.PREMIUM_RIDES)
             };
-            Rides[] rides3 = {new Rides(2.0, 5, TypesOfCabs.PREMIUM_RIDES),
-                    new Rides(0.1, 1, TypesOfCabs.NORMAL_RIDES)
+            Ride[] ride3 = {new Ride(2.0, 5, CabRides.PREMIUM_RIDES),
+                    new Ride(0.1, 1, CabRides.NORMAL_RIDES)
             };
-            rideRepository.addRides(userId, rides1);
-            rideRepository.addRides(userId, rides2);
-            rideRepository.addRides(userId, rides3);
-            List<Rides> ridesList = rideRepository.getRides(userId);
-            Assert.assertEquals(6, ridesList.size());
+            rideRepository.addRides(userId, ride1);
+            rideRepository.addRides(userId, ride2);
+            rideRepository.addRides(userId, ride3);
+            List<Ride> rideList = rideRepository.getRides(userId);
+            Assert.assertEquals(6, rideList.size());
         } catch (InvoiceServiceException e) {
         }
     }
@@ -61,35 +61,35 @@ public class RideRepositoryTest {
         try {
             RideRepository rideRepository = new RideRepository();
             String userId1 = "a@b.com";
-            Rides[] rides1 = {new Rides(1.0, 10, TypesOfCabs.NORMAL_RIDES),
-                    new Rides(0.1, 1, TypesOfCabs.PREMIUM_RIDES)
+            Ride[] ride1 = {new Ride(1.0, 10, CabRides.NORMAL_RIDES),
+                    new Ride(0.1, 1, CabRides.PREMIUM_RIDES)
             };
-            Rides[] rides2 = {new Rides(3.0, 5, TypesOfCabs.NORMAL_RIDES),
-                    new Rides(0.1, 1, TypesOfCabs.PREMIUM_RIDES)
+            Ride[] ride2 = {new Ride(3.0, 5, CabRides.NORMAL_RIDES),
+                    new Ride(0.1, 1, CabRides.PREMIUM_RIDES)
             };
-            Rides[] rides3 = {new Rides(2.0, 5, TypesOfCabs.PREMIUM_RIDES),
-                    new Rides(0.1, 1, TypesOfCabs.NORMAL_RIDES)
+            Ride[] ride3 = {new Ride(2.0, 5, CabRides.PREMIUM_RIDES),
+                    new Ride(0.1, 1, CabRides.NORMAL_RIDES)
             };
             String userId2 = "x@z.com";
-            Rides[] user2Rides1 = {new Rides(1.0, 10, TypesOfCabs.NORMAL_RIDES),
-                    new Rides(0.1, 1, TypesOfCabs.PREMIUM_RIDES)
+            Ride[] user2Ride1 = {new Ride(1.0, 10, CabRides.NORMAL_RIDES),
+                    new Ride(0.1, 1, CabRides.PREMIUM_RIDES)
             };
-            Rides[] user2Rides2 = {new Rides(3.0, 5, TypesOfCabs.NORMAL_RIDES),
-                    new Rides(0.1, 1, TypesOfCabs.PREMIUM_RIDES)
+            Ride[] user2Ride2 = {new Ride(3.0, 5, CabRides.NORMAL_RIDES),
+                    new Ride(0.1, 1, CabRides.PREMIUM_RIDES)
             };
-            Rides[] user2Rides3 = {new Rides(2.0, 5, TypesOfCabs.NORMAL_RIDES),
-                    new Rides(0.1, 1, TypesOfCabs.NORMAL_RIDES),
-                    new Rides(0.1, 1, TypesOfCabs.PREMIUM_RIDES)
+            Ride[] user2Ride3 = {new Ride(2.0, 5, CabRides.NORMAL_RIDES),
+                    new Ride(0.1, 1, CabRides.NORMAL_RIDES),
+                    new Ride(0.1, 1, CabRides.PREMIUM_RIDES)
             };
-            rideRepository.addRides(userId1, rides1);
-            rideRepository.addRides(userId1, rides2);
-            rideRepository.addRides(userId1, rides3);
-            rideRepository.addRides(userId2, user2Rides1);
-            rideRepository.addRides(userId2, user2Rides2);
-            rideRepository.addRides(userId2, user2Rides3);
+            rideRepository.addRides(userId1, ride1);
+            rideRepository.addRides(userId1, ride2);
+            rideRepository.addRides(userId1, ride3);
+            rideRepository.addRides(userId2, user2Ride1);
+            rideRepository.addRides(userId2, user2Ride2);
+            rideRepository.addRides(userId2, user2Ride3);
 
-            List<Rides> ridesList = rideRepository.getRides(userId2);
-            Assert.assertEquals(7, ridesList.size());
+            List<Ride> rideList = rideRepository.getRides(userId2);
+            Assert.assertEquals(7, rideList.size());
         } catch (InvoiceServiceException e) {
         }
     }
